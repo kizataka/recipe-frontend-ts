@@ -36,7 +36,6 @@ export const Register = () => {
         }
     };
 
-
     return (
         <>
             <Header />
