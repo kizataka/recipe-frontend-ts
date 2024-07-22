@@ -3,14 +3,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../axiosConfig";
 // import { Header } from "../components/Header";
-import { RegisterForm } from "../components/RegisterForm";
+import { LoginForm } from "../components/LoginForm";
 
-export const Register = () => {
+export const Login = () => {
     const [formValues, setFormValues] = useState({
-        name: "",
         email: "",
         password: "",
-        password_confirmation: "",
     });
 
     const navigate = useNavigate();
@@ -18,21 +16,22 @@ export const Register = () => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormValues({
             ...formValues,
-            [e.target.name]: e.target.value,
+            [e.target.name]: e.target.value
         });
     };
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const response = await axiosInstance.post("/api/account", formValues);
-            if (response.status === 201) {
-                console.log("ユーザー登録が完了しました");
-                navigate("/login");
+            const response = await axiosInstance.post("/api/session", formValues);
+            if (response.status === 200) {
+                localStorage.setItem("token", response.data.token);
+                console.log("ログインが成功しました");
+                navigate("/");
             }
         } catch (error) {
-            console.error(error);
-            alert("ユーザー登録に失敗しました");
+            console.log("ログインに失敗しました");
+            alert("ログインに失敗しました");
         }
     };
 
@@ -40,10 +39,10 @@ export const Register = () => {
         <>
             {/* <Header /> */}
             <div>
-                <h2>ユーザー登録</h2>
+                <h2>ログイン</h2>
             </div>
             <div className="input-area">
-                <RegisterForm
+                <LoginForm
                     formValues={formValues}
                     handleChange={handleChange}
                     handleSubmit={handleSubmit}
