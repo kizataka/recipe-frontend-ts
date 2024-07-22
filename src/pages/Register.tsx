@@ -1,8 +1,8 @@
-import "./styles.css";
+import "../styles.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../axiosConfig";
-import { Header } from "../components/Header";
+// import { Header } from "../components/Header";
 import { RegisterForm } from "../components/RegisterForm";
 
 export const Register = () => {
@@ -38,7 +38,7 @@ export const Register = () => {
 
     return (
         <>
-            <Header />
+            {/* <Header /> */}
             <div>
                 <h2>ユーザー登録</h2>
             </div>
