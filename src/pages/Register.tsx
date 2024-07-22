@@ -28,7 +28,7 @@ export const Register = () => {
             const response = await axiosInstance.post("/api/account", formValues);
             if (response.status === 201) {
                 console.log("ユーザー登録が完了しました");
-                navigate("/api/login");
+                navigate("/login");
             }
         } catch (error) {
             console.error(error);
