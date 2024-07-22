@@ -1,29 +1,24 @@
 import "../styles.css";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../axiosConfig";
 // import { Header } from "../components/Header";
 import { LoginForm } from "../components/LoginForm";
+import { LoginFormValues } from "../types";
 
 export const Login = () => {
-    const [formValues, setFormValues] = useState({
-        email: "",
-        password: "",
-    });
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+    } = useForm<LoginFormValues>({ mode: "onChange" });
 
     const navigate = useNavigate();
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormValues({
-            ...formValues,
-            [e.target.name]: e.target.value
-        });
-    };
 
-    const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const onSubmit = async(data: LoginFormValues) => {
         try {
-            const response = await axiosInstance.post("/api/session", formValues);
+            const response = await axiosInstance.post("/api/session", data);
             if (response.status === 200) {
                 localStorage.setItem("token", response.data.token);
                 console.log("ログインが成功しました");
@@ -43,9 +38,10 @@ export const Login = () => {
             </div>
             <div className="input-area">
                 <LoginForm
-                    formValues={formValues}
-                    handleChange={handleChange}
+                    register={register}
+                    errors={errors}
                     handleSubmit={handleSubmit}
+                    onSubmit={onSubmit}
                 />
             </div>
         </>

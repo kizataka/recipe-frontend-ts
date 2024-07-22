@@ -1,19 +1,30 @@
+import { UseFormRegister, FieldErrors, SubmitHandler } from "react-hook-form";
+import { LoginFormValues } from "../types";
+
 interface LoginFormProps {
-    formValues: {
-        email: string;
-        password: string;
-    };
-    handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+    register: UseFormRegister<LoginFormValues>;
+    errors: FieldErrors<LoginFormValues>;
+    handleSubmit: (onSubmit: SubmitHandler<LoginFormValues>) => (e?: React.BaseSyntheticEvent) => Promise<void>;
+    onSubmit: SubmitHandler<LoginFormValues>;
 }
 
-export const LoginForm = (props: LoginFormProps) => {
-    const { formValues, handleChange, handleSubmit } = props;
-
+export const LoginForm: React.FC<LoginFormProps> = ({ register, errors, handleSubmit, onSubmit }) => {
     return (
-        <form onSubmit={handleSubmit}>
-            <input type="email" name="email" placeholder="メールアドレス" value={formValues.email} onChange={handleChange} />
-            <input type="password" name="password" placeholder="パスワード" value={formValues.password} onChange={handleChange} />
+        <form onSubmit={handleSubmit(onSubmit)}>
+            <label htmlFor="email">メールアドレス</label>
+            <input
+                id="email"
+                type="email"
+                {...register("email", { required: "メールアドレスは必須です" })}
+            />
+            <p>{errors.email?.message as React.ReactNode}</p>
+            <label htmlFor="password">パスワード</label>
+            <input
+                id="password"
+                type="password"
+                {...register("password", { required: "パスワードは必須です" })}
+            />
+            <p>{errors.password?.message as React.ReactNode}</p>
             <button type="submit">ログイン</button>
         </form>
     );
