@@ -1,22 +1,40 @@
+import { UseFormRegister, FieldErrors, SubmitHandler } from "react-hook-form";
+import { RegisterFormValues } from "../types";
+
 interface RegisterFormProps {
-    formValues: {
-        name: string;
-        email: string;
-        password: string;
-        password_confirmation: string;
-    };
-    handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+    register: UseFormRegister<RegisterFormValues>;
+    errors: FieldErrors<RegisterFormValues>;
+    handleSubmit: (onSubmit: SubmitHandler<RegisterFormValues>) => (e?: React.BaseSyntheticEvent) => Promise<void>;
+    onSubmit: SubmitHandler<RegisterFormValues>;
 }
 
-export const RegisterForm = (props: RegisterFormProps) => {
-    const { formValues, handleChange, handleSubmit } = props;
+export const RegisterForm: React.FC<RegisterFormProps> = ({ register, errors, handleSubmit, onSubmit}) => {
     return (
-        <form onSubmit={handleSubmit}>
-            <input type="text" name="name" placeholder="ユーザー名" value={formValues.name} onChange={handleChange} />
-            <input type="email" name="email" placeholder="メールアドレス" value={formValues.email} onChange={handleChange} />
-            <input type="password" name="password" placeholder="パスワード" value={formValues.password} onChange={handleChange} />
-            <input type="password" name="password_confirmation" placeholder="パスワード（確認用）" value={formValues.password_confirmation} onChange={handleChange} />
+        <form onSubmit={handleSubmit(onSubmit)}>
+            <label htmlFor="name">ユーザー名</label>
+            <input
+                id="name"
+                type="text"
+                {...register("name", { required: "ユーザー名は必須です" })}
+            />
+            <label htmlFor="email">メールアドレス</label>
+            <input
+                id="email"
+                type="email"
+                {...register("email", { required: "メールアドレスは必須です" })}
+            />
+            <label htmlFor="password">パスワード</label>
+            <input
+                id="password"
+                type="password"
+                {...register("password", { required: "パスワードは必須です" })}
+            />
+            <label htmlFor="password_confirmation">パスワード（確認用）</label>
+            <input
+                id="password_confirmation"
+                type="password"
+                {...register("password_confirmation", { required: "パスワード（確認用）は必須です" })}
+            />
             <button type="submit">登録</button>
         </form>
     );
