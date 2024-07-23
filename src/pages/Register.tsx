@@ -1,31 +1,23 @@
 import "../styles.css";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../axiosConfig";
 // import { Header } from "../components/Header";
 import { RegisterForm } from "../components/RegisterForm";
+import { RegisterFormValues } from "../types";
 
 export const Register = () => {
-    const [formValues, setFormValues] = useState({
-        name: "",
-        email: "",
-        password: "",
-        password_confirmation: "",
-    });
+    const {
+        register,
+        handleSubmit,
+        formState: {errors}
+    } = useForm<RegisterFormValues>({ mode: "onChange" });
 
     const navigate = useNavigate();
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormValues({
-            ...formValues,
-            [e.target.name]: e.target.value,
-        });
-    };
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const onSubmit = async (data: RegisterFormValues) => {
         try {
-            const response = await axiosInstance.post("/api/account", formValues);
+            const response = await axiosInstance.post("/api/account", data);
             if (response.status === 201) {
                 console.log("ユーザー登録が完了しました");
                 navigate("/login");
@@ -44,9 +36,10 @@ export const Register = () => {
             </div>
             <div className="input-area">
                 <RegisterForm
-                    formValues={formValues}
-                    handleChange={handleChange}
+                    register={register}
+                    errors={errors}
                     handleSubmit={handleSubmit}
+                    onSubmit={onSubmit}
                 />
             </div>
         </>
